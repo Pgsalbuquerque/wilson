@@ -14,73 +14,49 @@ const Cidade = require("./app/models/Cidade")
 //put alterar alguma coisa no banco de dados
 
 
-routes.post("/comprarpassagem", async function (req, res) {
-    const infos = req.body
+routes.get("/teste", async function (req, res) {
+    
+    const destino = "bezerros"
+    const partida = "caruaru"
+    const cpf = "4540573890"
 
-    if (infos.cpf.length > 11) {
-        return res.send({"error": "cpf tem mais de 11 caracters"})
-    }
 
-    const client = await Client.finOne({where: {"cpf": infos.cpf}})
+    const user = await Client.findOne({where: {"cpf": cpf}})
 
-    if (client == null) {
-        return res.send({"error": "esse usuario nao existe"})
-    }
+    if (!user) return res.send({"erro": "esse usuario nn existe"}) 
 
-    const cidadeDestino = await Cidade.finOne({where: {"nomecidade": infos.destino}})
+    const cidade_destino = await Cidade.findOne({where: {"nome": destino}})
 
-    if (cidadeDestino == null) {
-        return res.send({"error": "cidade nao existe no banco de dados"})
-    }
-
-    const cidadePartida = await Cidade.finOne({where: {"nomecidade": infos.partida}})
-
-    if (cidadePartida == null) {
-        return res.send({"error": "cidade partida nao existe no banco de dados"})
-    }
-
-    await Passagem.create({"cpf": infos.cpf, "destino_id": cidadeDestino.id, "partida": infos.partida})
-
-    //await Address.create({cep, number, street, complement, city, district, employee_cpf, provider_cnpj, client_cpf});
-    //const cidade = await Employee.findOne({where: {cpf: employee_cpf}});
-
-    return res.send({"status": "success"})
-})
-
-routes.delete("/deletarpassagem", async function (req, res) {
-    const infos = req.body
-
-    const passagem = await Passagem.findOne({where: {"cod_passagem": infos.codigopassagem}});
-
-    if (!passagem) return res.status(404).send({"error": "essa passagem nn existe"});
-
-    await passagem.destroy();
-
-    return res.send({"status": "success"})
+    const passagem = await Passagem.create({"cidade_destino": destino, "cidade_partida": partida, "client_cpf": cpf})
+    
+    return res.send({"res": passagem})
 
 })
 
-routes.put("/modificarpassagem", async function (req, res) {
-    const infos = req.body
-    //{"cod_passagem": "4365475", "destino": "caruaru"}
+routes.get("/teste2", async function (req, res) {
 
+    const nome_cidade = "caruaru"
 
-    const passagem = await Passagem.findOne({where: {"cod_passagem": infos.cod_passagem}});
+    const cidade = await Cidade.create({nome: nome_cidade});
 
-    if (!passagem) return res.status(404).send({"error": "essa passagem nn existe"});
-
-    passagem.destino = infos.destino;
-
-    passagem.save();
-
-    return res.send({"status": "success"})
+    return res.send({"status": cidade})
 
 })
 
-routes.get("/listartodaspassagens", async function (req, res) {
+routes.get("/teste3", async function (req, res) {
+    
+    const destino = "bezerros"
+    const partida = "caruaru"
+    const cpf = "1235734123"
+
+    const passagem = await Passagem.create({client_cpf: cpf, cidade_partida: partida, cidade_destino: destino});
+
+    return res.send({"status": passagem})
+
+})
+
+routes.get("/teste4", async function (req, res) {
     const ArrayDePassagens = await Passagem.findAll()
-
-    if (!ArrayDePassagens) return res.send({"error": "nao tem nenhuma passagem"})
 
     return res.send(ArrayDePassagens)
 })

@@ -1,7 +1,7 @@
 const { Model } = require("sequelize");
 const Sequelize = require("sequelize");
 
-class Client extends Model {
+class Cidade extends Model {
     static init (sequelize){
         super.init(
         {
@@ -9,18 +9,18 @@ class Client extends Model {
                 type: Sequelize.NUMBER,
                 autoIncrement: true,
             },
-            cpf: {
+            nome: {
                 type: Sequelize.STRING,
                 primaryKey: true,
             }
         },
         {
             sequelize,
-            tableName: "client"
+            tableName: "cidade"
         })
 
         return this;
     }
 }
 
-module.exports = Client;
+module.exports = Cidade;

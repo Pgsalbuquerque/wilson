@@ -1,17 +1,25 @@
 const express = require('express');
 const routes = require('./routes');
-//const cors = require('cors');
+const cors = require('cors');
 
 require('./database/index');
 
-const server = express()
+class App {
+    constructor(){
+        this.server = express();
 
-server.use(express.json())
+        this.middlewares();
+        this.routes();
+    }
 
-server.use(routes);
+    middlewares(){
+        this.server.use(express.json());
+        this.server.use(cors());
+    }
 
-server.listen(3333)
+    routes(){
+        this.server.use(routes);
+    }
+}
 
-console.log("servidor rodando")
-
-module.exports = server;
+module.exports = new App().server;

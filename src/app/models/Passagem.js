@@ -8,19 +8,12 @@ class Passagem extends Model {
             id: {
                 type: Sequelize.NUMBER,
                 primaryKey: true,
+                autoIncrement: true,
             },
-            destino: {
-                type: Sequelize.STRING,
-            },
-            partida: {
-                type: Sequelize.STRING,
-            },
-            hora: {
-                type: Sequelize.DATE,
-            }
         },
         {
-            sequelize
+            sequelize, 
+            tableName: "passagem"
         })
 
         return this;
@@ -28,6 +21,8 @@ class Passagem extends Model {
 
     static associate(models) {
         this.belongsTo(models.Client, {foreignKey: "client_cpf"});
+        this.belongsTo(models.Cidade, {foreignKey: "cidade_destino"});
+        this.belongsTo(models.Cidade, {foreignKey: "cidade_partida"});
     }
 }
 
