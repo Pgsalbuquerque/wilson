@@ -15,21 +15,10 @@ const Cidade = require("./app/models/Cidade")
 
 
 routes.get("/teste", async function (req, res) {
-    
-    const destino = "bezerros"
-    const partida = "caruaru"
-    const cpf = "4540573890"
 
+    const array = await Cidade.findAll()
 
-    const user = await Client.findOne({where: {"cpf": cpf}})
-
-    if (!user) return res.send({"erro": "esse usuario nn existe"}) 
-
-    const cidade_destino = await Cidade.findOne({where: {"nome": destino}})
-
-    const passagem = await Passagem.create({"cidade_destino": destino, "cidade_partida": partida, "client_cpf": cpf})
-    
-    return res.send({"res": passagem})
+    return res.send({"resposta": array})
 
 })
 
@@ -55,10 +44,13 @@ routes.get("/teste3", async function (req, res) {
 
 })
 
-routes.get("/teste4", async function (req, res) {
-    const ArrayDePassagens = await Passagem.findAll()
+routes.post("/teste4", async function (req, res) {
 
-    return res.send(ArrayDePassagens)
+    const {cpf, destino, partida} = req.body
+
+    const passagem = await Passagem.create({client_cpf: cpf, cidade_destino: destino, cidade_partida: partida})
+
+    return res.send({passagem})
 })
 
 routes.get("/listarporusuario", async function (req, res) {
